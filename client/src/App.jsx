@@ -1,6 +1,7 @@
 import '@mantine/core/styles.css';
-import { Avatar } from '@mantine/core';
+import './App.css'
 import Navbar from './components/Navbar';
+import Signup from './components/auth/Signup';
 
 
 function App() {
@@ -8,16 +9,7 @@ function App() {
 
     <>
     <Navbar/>
-      {/* With image */}
-      <Avatar src="avatar.png" alt="it's me" />
-
-      {/* Default placeholder */}
-      <Avatar radius="xl" />
-
-      {/* Letters with xl radius */}
-      <Avatar color="cyan" radius="xl">MK</Avatar>
-
-      {/* Custom placeholder icon */}
+    <Signup/>
     
     </>
   );
