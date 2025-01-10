@@ -1,15 +1,19 @@
-import {
-  createSlice,
-  createAsyncThunk,
-  isRejectedWithValue,
-} from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
-export const register = createAsyncThunk(
+export const SignupForm = createAsyncThunk(
   '/auth/register',
   async (data, { rejectWithValue }) => {
     try {
-      const res = await axios.post('http://localhost:3000/auth/register', data);
+      const res = await axios.post(
+        'http://localhost:3000/auth/register',
+        data,
+        {
+          headers: {
+            'Content-Type': 'multipart-form/data',
+          },
+        }
+      );
       return res.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -30,18 +34,16 @@ const authSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      .addCase(register.pending, (state, action) => {
+      .addCase(SignupForm.pending, (state, action) => {
         state.loading = true;
       })
-      .addCase(register.fulfilled, (state, action) => {
+      .addCase(SignupForm.fulfilled, (state, action) => {
         state.loading = false;
       })
-      .addCase(register.rejected, (state, action) => {
+      .addCase(SignupForm.rejected, (state, action) => {
         state.loading = false;
       });
   },
 });
-
-
 
 export default authSlice.reducer;
