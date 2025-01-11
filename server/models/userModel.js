@@ -18,8 +18,6 @@ const UserSchema = mongoose.Schema({
     type: String,
     enum: ['admin', 'recruiter', 'jobseeker'],
   },
-  //common fields end for all roles
-  //now we have role based fields
   jobseeker: {
     education: [
       {
@@ -64,6 +62,7 @@ const UserSchema = mongoose.Schema({
   },
 });
 
+//middleware
 UserSchema.pre('save', async function (next) {
   if (this.role === 'recruiter') {
     this.jobseeker = undefined;

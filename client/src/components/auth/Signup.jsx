@@ -7,6 +7,7 @@ function Signup() {
   const { register, handleSubmit, watch } = useForm();
 const dispatch = useDispatch() ;
   const onSubmit = (data) => {
+    console.log(data.resume[0])
   const formData = new FormData() ;
   formData.append("name",data.name) ;
   formData.append("email",data.email) ;
@@ -32,8 +33,9 @@ const dispatch = useDispatch() ;
         }
       ],
       skills : data.skills.split(','),
-      resume : data.resume[0]
+    
     }))
+    formData.append('resume',data.resume[0])
   }
 
   if(data.role === 'recruiter'){
