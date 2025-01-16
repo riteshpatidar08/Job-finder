@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+
 export const SignupForm = createAsyncThunk(
   '/auth/register',
   async (data, { rejectWithValue }) => {

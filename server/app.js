@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import dbConnect from './db/connect.js';
 import userRouter from './routes/userRouter.js';
 import cors from 'cors'
+import JobRoutes from './routes/jobRoutes.js';
 dotenv.config();
 dbConnect();
 
@@ -14,7 +15,7 @@ app.use(express.json())
 //routes
 
 app.use('/auth', userRouter);
-
+app.use('/job' , JobRoutes)
 app.listen(process.env.PORT, () => {
   console.log(`Server is running on the ${process.env.PORT}`);
 });

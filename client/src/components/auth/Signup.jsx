@@ -39,7 +39,7 @@ const dispatch = useDispatch() ;
   }
 
   if(data.role === 'recruiter'){
-    form.append('recruiter', JSON.stringify({
+    formData.append('recruiter', JSON.stringify({
       companyName : data.companyName ,
       companyWebsite : data.companyWebsite
     }))
