@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 import { jwtDecode } from 'jwt-decode';
+import { getRole } from '../../utils/getRole';
+import { getToken } from '../../utils/getToken';
 
 export const SignupForm = createAsyncThunk(
   '/auth/register',
@@ -36,8 +38,8 @@ export const LoginForm = createAsyncThunk(
 //first is action name => /auth/signup ;
 const initialState = {
   loading: false,
-  token: null,
-  role: null,
+  token: getToken() || null,
+  role: getRole() || null,
   id: null,
 };
 //return promise => pending , rejected and fulfilled inside the slice

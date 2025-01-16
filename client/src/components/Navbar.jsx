@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
+import ProfileDropdown from './ProfileDropdown';
 function Navbar() {
   const location = useLocation();
   const { role } = useSelector((state) => state.auth);
@@ -16,7 +17,7 @@ function Navbar() {
         <Link to="/" className="text-white ml-2 text-xl font-bold">
           Job<span className="text-red">finder</span>
         </Link>
-        <div className="flex items-center gap-6 justify-between">
+        <div className="flex items-center gap-4 justify-between">
           <Link to="/" className="text-md font-semibold">
             Jobs
           </Link>
@@ -56,6 +57,8 @@ function Navbar() {
               </Link>
             </span>
           )}
+
+          {role && <ProfileDropdown role={role}/>}
         </div>
       </header>
     </div>
