@@ -60,6 +60,12 @@ const UserSchema = mongoose.Schema({
       type: String,
     },
   },
+  appliedJobs : {
+    jobId : [{
+      type : mongoose.Schema.Types.ObjectId ,
+      ref : 'Job'
+    }]
+  }
 });
 
 //middleware

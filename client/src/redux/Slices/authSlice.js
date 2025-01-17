@@ -31,7 +31,7 @@ export const LoginForm = createAsyncThunk(
       const res = await axios.post('http://localhost:3000/auth/login', data);
       return res.data;
     } catch (error) {
-      return rejectWithValue(error);
+      return rejectWithValue(error.response);
     }
   }
 );
@@ -48,7 +48,15 @@ const initialState = {
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {},
+  reducers: {
+    logOut : (state,action) => {
+       state.token = null ;
+       state.role = null ;
+       state.id = null ;
+      localStorage.removeItem('token')
+      localStorage.removeItem('role')
+    }
+  },
   extraReducers: (builder) => {
     builder
       .addCase(SignupForm.pending, (state, action) => {
@@ -80,5 +88,7 @@ const authSlice = createSlice({
       });
   },
 });
+
+export const {logOut} = authSlice.actions ;
 
 export default authSlice.reducer;

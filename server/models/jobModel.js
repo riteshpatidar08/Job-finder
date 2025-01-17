@@ -49,6 +49,19 @@ const JobSchema = new mongoose.Schema({
     type: Date,
     default: Date.now(),
   },
+  applicants : [{
+    userId : {
+      type : mongoose.Schema.Types.ObjectId ,
+      ref : 'User'
+    },
+    resume : {
+      type : String
+    },
+    status : {
+      type : String ,
+      enum : ["Pending", "Accepted", "Rejected"]
+    }
+  }]
 });
 
 

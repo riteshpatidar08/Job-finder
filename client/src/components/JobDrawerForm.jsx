@@ -9,13 +9,15 @@ import {
   Textarea,
   Group,
 } from '@mantine/core';
+import { CreateJob } from '../redux/Slices/jobSlice';
+import { useDispatch } from 'react-redux';
 function JobDrawerForm({ opened, close }) {
   const { register, handleSubmit, watch } = useForm();
   const [value, setValue] = useState([]);
   const [selectExperience, setSelectExperience] = useState(null);
   const [min, setMin] = useState(null);
-  const [max , setMax] = useState(null);
-  console.log(value, selectExperience);
+  const [max, setMax] = useState(null);
+  const dispatch = useDispatch();
   const employmentOptions = [
     'Full-time',
     'Part-time',
@@ -23,21 +25,31 @@ function JobDrawerForm({ opened, close }) {
     'Internship',
   ];
   const experienceOptions = ['0-1 years', '1-2 years', '2-3 years', '4+ years'];
+
   const onSubmit = (data) => {
     console.log(data);
-    const jobPayload = {...data , employment : value , experience : selectExperience , salaryRange : { min , max} , createdBy : localStorage.getItem('id')}
-    console.log(jobPayload)
+    const jobPayload = {
+      ...data,
+      employment: value,
+      experience: selectExperience,
+      salaryRange: { min, max },
+      createdBy: localStorage.getItem('id'),
+      requirement: data.requirement.split(',').map((el) => el.trim()),
+    };
+    console.log(jobPayload);
+    dispatch(CreateJob(jobPayload));
   };
 
   console.log(watch('employement'));
-
   return (
     <>
       <Drawer
-        position="right"
         opened={opened}
         onClose={close}
-        title="Create Job"
+        padding="md"
+        size="md"
+        position="right"
+        style={{ fontWeight: 600 }}
       >
         <div>
           <form onSubmit={handleSubmit(onSubmit)}>
@@ -66,6 +78,11 @@ function JobDrawerForm({ opened, close }) {
               placeholder="Enter Location"
               {...register('location')}
             />
+            <TextInput
+              label="Requirements"
+              placeholder="Enter Requirement(comma seprated)"
+              {...register('requirement')}
+            />
             <MultiSelect
               label="Employement"
               placeholder="Select Employement type"
@@ -89,19 +106,18 @@ function JobDrawerForm({ opened, close }) {
             />
 
             <Text fz="sm">Salary</Text>
-            <Group>
+            <Group grow>
               <NumberInput
                 placeholder="Enter min Salary"
                 name="min"
-               value={min} 
-               onChange={setMin}
+                value={min}
+                onChange={setMin}
               />
               <NumberInput
                 placeholder="Enter max Salary"
                 name="max"
                 value={max}
                 onChange={setMax}
-               
               />
             </Group>
             <Button type="submit" mt={10} variant="light">

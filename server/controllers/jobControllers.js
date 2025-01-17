@@ -2,8 +2,12 @@ import Job from './../models/jobModel.js';
 import { sendSuccess } from '../utils/sendSuccess.js';
 
 const getJobs = async (req, res) => {
+  const { currentPage, totalItems = 10 } = req.query;
+  console.log(currentPage);
   try {
-    const job = await Job.find();
+    const job = await Job.find()
+      .limit(totalItems)
+      .skip((currentPage - 1) * totalItems);
 
     if (!job) {
       return res.status(404).json({
@@ -12,8 +16,14 @@ const getJobs = async (req, res) => {
     }
 
     const totalCount = await Job.countDocuments();
-
-    sendSuccess(200, 'Jobs fetched Successfully', { job, totalCount }, res);
+    const totalPages = Math.ceil(totalCount / totalItems);
+    const totalLength = job.length;
+    sendSuccess(
+      200,
+      'Jobs fetched Successfully',
+      { job, totalCount, totalLength, totalPages },
+      res
+    );
   } catch (error) {
     return res.status(500).json({
       message: error.message,

@@ -8,15 +8,22 @@ import { lazy } from 'react';
 import MyApplication from './pages/JobSeeker/MyApplication';
 import PrivateRoutes from './components/PrivateRoutes';
 import PostJobPage from './pages/Recruiter/PostJobPage';
+import OpenRoutes from './components/OpenRoutes';
 // const Signup = lazy(()=>import('./components/auth/Signup')) ;
+import { Toaster } from 'sonner'
+import Homepage from './pages/Homepage';
 
 function App() {
   return (
     <>
+    <Toaster  position="top-center"/>
       <Navbar />
       <Routes>
-        <Route path="/login" element={<Login />} />
+        <Route element={<OpenRoutes/>}>
+          <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        </Route>
+        <Route path='/' element={<Homepage/>}/>
         <Route element={<PrivateRoutes allowedRole={['jobseeker']} />}>
           <Route path="/jobseeker/myapplications" element={<MyApplication />} />
         </Route>
