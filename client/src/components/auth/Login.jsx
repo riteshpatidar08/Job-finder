@@ -5,9 +5,10 @@ import { useDispatch } from 'react-redux';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { MailIcon, Lock } from 'lucide-react';
+import {Loader} from '@mantine/core'
 function Login() {
   const { register, handleSubmit } = useForm();
-  const { role } = useSelector((state) => state.auth);
+  const { role , loading } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -81,7 +82,7 @@ function Login() {
           type="submit"
           className="w-full font-semibold tracking-wide  bg-red text-white py-2 rounded-full"
         >
-          Login
+         {loading ? <Loader size={16} color="white"/> : "Login"}
         </button>
       </form>
     </div>

@@ -65,7 +65,7 @@ const jobSlice = createSlice({
         state.totalPages = action.payload.data.totalPages ;
         state.jobs = action.payload.data.job
 
-        toast.success(action.payload.message);
+        // toast.success(action.payload.message);
       })
       .addCase(getJob.rejected, (state, action) => {
         (state.loading = false), console.log(action.payload);

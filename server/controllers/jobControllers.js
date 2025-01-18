@@ -1,11 +1,12 @@
 import Job from './../models/jobModel.js';
 import { sendSuccess } from '../utils/sendSuccess.js';
+import User from './../models/userModel.js';
 
 const getJobs = async (req, res) => {
   const { currentPage, totalItems = 10 } = req.query;
   console.log(currentPage);
   try {
-    const job = await Job.find()
+    const job = await Job.find().sort({postedDate : -1})
       .limit(totalItems)
       .skip((currentPage - 1) * totalItems);
 
@@ -47,4 +48,55 @@ const createJob = async (req, res) => {
   }
 };
 
-export { createJob, getJobs };
+const applyJob = async (req, res) => {
+  const { userId, jobId } = req.body;
+
+  //check if user exist
+  const user = await User.findById(userId);
+  console.log(user);
+  if (!user) {
+    return res.status(400).json({ message: 'User not found' });
+  }
+  const resumepath = user.jobseeker.resume;
+
+  if (!resumepath) {
+    return res.status(400).json({
+      message:
+        'Resume not found for this user , Please upload your resume in the profile section then try again',
+    });
+  }
+
+  const job = await Job.findById(jobId);
+  if (!job) {
+    return res.status(400).json({
+      message: 'The job you  applying for is not found',
+    });
+  }
+
+  const alreadyapplied = user.appliedJobs.jobId.some(
+    (id) => id.toString() === jobId
+  );
+
+  if (alreadyapplied) {
+    return res.status(400).json({
+      message: 'You have already applied for this job',
+    });
+  }
+
+  user.appliedJobs.jobId.push(jobId);
+
+  job.applicants.push({
+    userId: userId,
+    resume: resumepath,
+    status: 'Pending',
+  });
+
+  await user.save();
+  await job.save();
+
+  res.status(200).json({
+    message: 'Job applied successfull',
+  });
+};
+
+export { createJob, getJobs, applyJob };

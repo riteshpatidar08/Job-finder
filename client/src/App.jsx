@@ -10,29 +10,40 @@ import PrivateRoutes from './components/PrivateRoutes';
 import PostJobPage from './pages/Recruiter/PostJobPage';
 import OpenRoutes from './components/OpenRoutes';
 // const Signup = lazy(()=>import('./components/auth/Signup')) ;
-import { Toaster } from 'sonner'
+import { Toaster } from 'sonner';
 import Homepage from './pages/Homepage';
 
 function App() {
   return (
     <>
-    <Toaster  position="top-center"/>
+      <Toaster
+        position="bottom-left"
+        toastOptions={{
+          classNames: {
+            error: 'bg-red-400',
+            success:
+              'bg-input-field  flex item-center justify-center p-2 text-white rounded-lg',
+            warning: 'text-yellow-400',
+            info: 'bg-blue-400',
+          },
+        }}
+      />
       <Navbar />
       <Routes>
-        <Route element={<OpenRoutes/>}>
+        <Route element={<OpenRoutes />}>
           <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />} />
+          <Route path="/signup" element={<Signup />} />
         </Route>
-        <Route path='/' element={<Homepage/>}/>
+
+        <Route path="/" element={<Homepage />} />
+
         <Route element={<PrivateRoutes allowedRole={['jobseeker']} />}>
           <Route path="/jobseeker/myapplications" element={<MyApplication />} />
         </Route>
 
-        <Route element={<PrivateRoutes allowedRole={['recruiter']}/>}>
-          <Route path='/recruiter/post-job' element={<PostJobPage/>}/>
+        <Route element={<PrivateRoutes allowedRole={['recruiter']} />}>
+          <Route path="/recruiter/post-job" element={<PostJobPage />} />
         </Route>
-
-
       </Routes>
     </>
   );

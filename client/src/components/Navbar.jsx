@@ -11,21 +11,23 @@ function Navbar() {
   return (
     <div>
       <header
-        className="bg-gray-alpha-2 sticky top-0 z-10 p-3 bg-opacity-50 backdrop-blur-sm 
-   m-3 rounded-lg flex justify-between items-center h-16"
+        className="h-16 m-3 bg-opacity-50 backdrop-blur-lg rounded-lg  drop-shadow-md px-4 sticky z-10 top-0 flex bg-dark-gray-1 items-center justify-between"
       >
         <Link to="/" className="text-white ml-2 text-xl font-bold">
           Job<span className="text-red">finder</span>
         </Link>
         <div className="flex items-center gap-4 justify-between">
-          <Link to="/" className="text-md font-semibold">
+          <Link
+            to="/"
+            className="text-sm hover:bg-red p-2 transition-all ease-linear duration-300 rounded-lg text-white"
+          >
             Jobs
           </Link>
 
           {role === 'recruiter' && (
             <>
               <Link
-                className="text-sm hover:bg-red p-2 rounded-lg text-white"
+                className="text-sm hover:bg-red p-2 transition-all ease-linear duration-300 rounded-lg text-white"
                 to="/recruiter/post-job"
               >
                 Post a Job
@@ -58,7 +60,7 @@ function Navbar() {
             </span>
           )}
 
-          {role && <ProfileDropdown role={role}/>}
+          {role && <ProfileDropdown role={role} />}
         </div>
       </header>
     </div>
