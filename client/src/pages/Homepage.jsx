@@ -20,15 +20,16 @@ function Homepage() {
       <Hero />
 
       <div className="flex">
-        <div className="w-1/4 border border-white "></div>
-        <div className="w-3/4 border p-4 border-red-500">
+        <div className="w-1/4 "></div>
+        <div className="w-3/4  p-4 ">
           <h1 className="font-bold text-xl">See Latest Job Posts</h1>
-          <div className='flex flex-col gap-4 mt-4 p-6'>
-          {jobs.length > 0  && jobs.slice(0,6).map((job)=>(
-            <JobCard job={job}/>
-          ))}
+          <div className="flex flex-col gap-4 mt-4 p-6">
+            {jobs.length > 0 &&
+              jobs.slice(0, 6).map((job) => <JobCard job={job} />)}
           </div>
-          <Link className="font-semibold hover:underline-offset-2  hover:underline text-red text-sm">See more</Link>
+          <Link to='/all-jobs' className="font-semibold hover:underline-offset-2  hover:underline text-red text-sm">
+            See more
+          </Link>
         </div>
       </div>
 

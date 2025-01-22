@@ -12,6 +12,7 @@ import OpenRoutes from './components/OpenRoutes';
 // const Signup = lazy(()=>import('./components/auth/Signup')) ;
 import { Toaster } from 'sonner';
 import Homepage from './pages/Homepage';
+import AllJobPage from './pages/AllJobPage';
 
 function App() {
   return (
@@ -34,7 +35,8 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
         </Route>
-
+ 
+ <Route path='/all-jobs' element={<AllJobPage/>}/>
         <Route path="/" element={<Homepage />} />
 
         <Route element={<PrivateRoutes allowedRole={['jobseeker']} />}>

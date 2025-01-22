@@ -6,8 +6,7 @@ import ProfileDropdown from './ProfileDropdown';
 function Navbar() {
   const location = useLocation();
   const { role } = useSelector((state) => state.auth);
-  console.log(role);
-  console.log(location);
+
   return (
     <div>
       <header

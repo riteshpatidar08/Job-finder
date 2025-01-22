@@ -2,52 +2,53 @@ import React from 'react';
 import { useForm } from 'react-hook-form';
 import './Signup.css';
 import { SignupForm } from '../../redux/Slices/authSlice';
-import {useDispatch} from 'react-redux' ;
+import { useDispatch } from 'react-redux';
 function Signup() {
   const { register, handleSubmit, watch } = useForm();
-const dispatch = useDispatch() ;
+  const dispatch = useDispatch();
   const onSubmit = (data) => {
-    console.log(data.resume[0])
-  const formData = new FormData() ;
-  formData.append("name",data.name) ;
-  formData.append("email",data.email) ;
-  formData.append("phoneNumber",data.phoneNumber) ;
-  formData.append('password',data.password) ;
-  formData.append("role",data.role) ;
+    const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('email', data.email);
+    formData.append('phoneNumber', data.phoneNumber);
+    formData.append('password', data.password);
+    formData.append('role', data.role);
 
-  if(data.role === 'jobseeker'){
-    formData.append('jobseeker', JSON.stringify({
-      education : [
-        {
-          degree : data.degree,
-          institution : data.institution ,
-          year : data.year
-        }
-      ],
-      experiance : [
-        {
-          companyName : data.companyName ,
-          designation : data.designation,
-          duration : data.duration
+    if (data.role === 'jobseeker') {
+      formData.append(
+        'jobseeker',
+        JSON.stringify({
+          education: [
+            {
+              degree: data.degree,
+              institution: data.institution,
+              year: data.year,
+            },
+          ],
+          experiance: [
+            {
+              companyName: data.companyName,
+              designation: data.designation,
+              duration: data.duration,
+            },
+          ],
+          skills: data.skills.split(','),
+        })
+      );
+      formData.append('resume', data.resume[0]);
+    }
 
-        }
-      ],
-      skills : data.skills.split(','),
-    
-    }))
-    formData.append('resume',data.resume[0])
-  }
+    if (data.role === 'recruiter') {
+      formData.append(
+        'recruiter',
+        JSON.stringify({
+          companyName: data.companyName,
+          companyWebsite: data.companyWebsite,
+        })
+      );
+    }
 
-  if(data.role === 'recruiter'){
-    formData.append('recruiter', JSON.stringify({
-      companyName : data.companyName ,
-      companyWebsite : data.companyWebsite
-    }))
-  }
-
-
-    dispatch(SignupForm(formData))
-
+    dispatch(SignupForm(formData));
   };
 
   const selectedRole = watch('role');
@@ -208,7 +209,9 @@ const dispatch = useDispatch() ;
                   </div>
 
                   <div>
-                    <label className="block text-gray-700 mb-2">Designation</label>
+                    <label className="block text-gray-700 mb-2">
+                      Designation
+                    </label>
                     <input
                       type="text"
                       {...register('designation')}

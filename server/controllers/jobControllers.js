@@ -5,10 +5,12 @@ import User from './../models/userModel.js';
 const getJobs = async (req, res) => {
   const { currentPage, totalItems = 10 } = req.query;
   console.log(currentPage);
+
   try {
-    const job = await Job.find().sort({postedDate : -1})
+    const job = await Job.find()
+      .sort({ postedDate: -1 })
       .limit(totalItems)
-      .skip((currentPage - 1) * totalItems);
+      .skip((currentPage - 1) * totalItems).select('-applicants')
 
     if (!job) {
       return res.status(404).json({
@@ -99,4 +101,19 @@ const applyJob = async (req, res) => {
   });
 };
 
-export { createJob, getJobs, applyJob };
+
+const getJobByCreator = async(req,res) => {
+  try {
+     const {id } = req.params ;
+  const jobs = await Job.find({createdBy : id}).populate('createdBy' , 'name email') ;
+  console.log(jobs)
+  res.status(200).json({
+    data : jobs
+  })
+  } catch (error) {
+    
+  }
+ 
+}
+
+export { createJob, getJobs, applyJob ,getJobByCreator};

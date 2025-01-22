@@ -12,9 +12,11 @@ function Login() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (role === 'recruiter') {
+    if (role === 'recruiter' || role ==='jobseeker') {
       navigate('/');
     }
+
+  
   }, [role]);
 
   const dispatch = useDispatch();

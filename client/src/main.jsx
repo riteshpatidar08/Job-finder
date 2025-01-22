@@ -6,7 +6,7 @@ import { MantineProvider } from '@mantine/core';
 import { BrowserRouter } from 'react-router-dom';
 import { Provider } from 'react-redux';
 import store from './redux/store'
-
+import 'mantine-datatable/styles.layer.css';
 createRoot(document.getElementById('root')).render(
   <StrictMode>
     <Provider store={store}>
