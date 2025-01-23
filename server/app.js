@@ -13,6 +13,9 @@ app.use(express.json())
 //middlewares
 
 //routes
+app.get('/', (req,res)=>{
+  res.status(200).send('HomePage')
+})
 
 app.use('/auth', userRouter);
 app.use('/job' , JobRoutes)

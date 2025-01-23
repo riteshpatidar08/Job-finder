@@ -5,6 +5,7 @@ import { Pagination } from '@mantine/core';
 import Hero from './../components/HeroSection';
 import JobCard from '../components/JobCard';
 import { Link } from 'react-router-dom';
+import { Skeleton } from '@mantine/core';
 function Homepage() {
   const dispatch = useDispatch();
   const [activePage, setPage] = useState(1);

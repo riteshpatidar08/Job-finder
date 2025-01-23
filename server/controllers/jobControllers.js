@@ -10,7 +10,8 @@ const getJobs = async (req, res) => {
     const job = await Job.find()
       .sort({ postedDate: -1 })
       .limit(totalItems)
-      .skip((currentPage - 1) * totalItems).select('-applicants')
+      .skip((currentPage - 1) * totalItems)
+      .select('-applicants');
 
     if (!job) {
       return res.status(404).json({
@@ -101,19 +102,63 @@ const applyJob = async (req, res) => {
   });
 };
 
-
-const getJobByCreator = async(req,res) => {
+const getJobByCreator = async (req, res) => {
   try {
-     const {id } = req.params ;
-  const jobs = await Job.find({createdBy : id}).populate('createdBy' , 'name email') ;
-  console.log(jobs)
-  res.status(200).json({
-    data : jobs
-  })
-  } catch (error) {
-    
-  }
- 
-}
+    const { id } = req.params;
+    const jobs = await Job.find({ createdBy: id }).populate(
+      'createdBy',
+      'name email'
+    );
+    console.log(jobs);
+    res.status(200).json({
+      data: jobs,
+    });
+  } catch (error) {}
+};
 
-export { createJob, getJobs, applyJob ,getJobByCreator};
+const getApplicants = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const job = await Job.findById(jobId).populate(
+      'applicants.userId',
+      'name email'
+    );
+    res.status(200).json({
+      job,
+    });
+  } catch (error) {}
+};
+
+const deactivateJob = async (req, res) => {
+  const { jobId } = req.params;
+  console.log(jobId);
+  const job = await Job.findById(jobId);
+
+  if (!job) {
+    return res.status(400).json({
+      message: 'No job Found',
+    });
+  }
+  if (!job.isActive) {
+    res.status(400).json({
+      message: 'Job is already deactivated',
+    });
+  }
+
+  job.isActive = false;
+  await job.save();
+
+  res.status(200).json({
+    message: 'Job is deactivated',
+  });
+};
+
+const getAppliedJob = async (req, res) => {};
+export {
+  createJob,
+  getJobs,
+  applyJob,
+  getJobByCreator,
+  getApplicants,
+  deactivateJob,
+};

@@ -1,24 +1,28 @@
-import React from 'react';
-import {  Group, Divider } from '@mantine/core';
+import React, { useEffect, useState } from 'react';
+import { Group, Divider } from '@mantine/core';
 import { Briefcase, IndianRupee, MapPin } from 'lucide-react';
 import { getToken } from '../utils/getToken';
 import { Link, Navigate } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { applyJob } from '../redux/Slices/jobSlice';
 import { useNavigate } from 'react-router-dom';
+import { Skeleton } from '@mantine/core';
+
 function JobCard({ job }) {
-  const navigate = useNavigate() 
-  const dispatch = useDispatch()
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
   const token = getToken();
-  const userId = localStorage.getItem('id')
-const handleApplyNow = (jobId) => {
-  const data = {userId, jobId}
-  if(token){
-   dispatch(applyJob(data))
-  }else {
-    navigate('/login')
-  }
-}
+  const [isLoading, setIsLoading] = useState(true);
+  const userId = localStorage.getItem('id');
+  const { loading } = useSelector((state) => state.job);
+  const handleApplyNow = (jobId) => {
+    const data = { userId, jobId };
+    if (token) {
+      dispatch(applyJob(data));
+    } else {
+      navigate('/login');
+    }
+  };
   function getTimeDifference(postedDate) {
     const currentDate = new Date();
     const postedDates = new Date(postedDate);
@@ -31,6 +35,22 @@ const handleApplyNow = (jobId) => {
     } else {
       return `Posted ${days} ago`;
     }
+  }
+  useEffect(() => {
+    const time = setTimeout(() => {
+      setIsLoading(false);
+    }, 3000);
+  }, []);
+
+  if (loading || isLoading) {
+    return (
+      <div className="w-2/4 relative  bg-gray-alpha-2 p-4 rounded-lg ">
+        <Skeleton height={12} width={200} mt={6} />
+        <Skeleton height={12} width={150} mt={6} />
+        <Skeleton height={12} width={300} mt={6} />
+        <Skeleton height={40} mt={10} />
+      </div>
+    );
   }
 
   return (
@@ -48,14 +68,18 @@ const handleApplyNow = (jobId) => {
             <Briefcase className="inline-block mr-2" size={16} />
             {job.experience}
           </h3>
+             <Divider orientation="vertical" />
+            <h3 className="text-xs">
+            <IndianRupee className="inline-block mr-2" size={14} />
+            {job.salaryRange.min} - {job.salaryRange.max}
+          </h3>
         </Group>
         <span className="text-sm absolute top-2 right-3 font-bold">
           {getTimeDifference(job.postedDate)}
         </span>
         <button
-        
-          onClick= {()=>handleApplyNow(job._id)}
-          className=" text-center rounded-md px-10 py-2 bg-red text-white"
+          onClick={() => handleApplyNow(job._id)}
+          className=" text-center rounded-md mt-4 px-10 py-2 bg-red text-white"
         >
           {token ? 'Apply Now' : 'Login to Apply'}
         </button>{' '}
