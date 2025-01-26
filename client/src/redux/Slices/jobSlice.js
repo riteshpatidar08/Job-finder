@@ -6,7 +6,10 @@ export const CreateJob = createAsyncThunk(
   '/auth/createjob',
   async (data, { rejectWithValue }) => {
     try {
-      const res = await axios.post('http://localhost:3000/job/createJob', data);
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/job/createJob`,
+        data
+      );
       return res.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -19,7 +22,7 @@ export const getJob = createAsyncThunk(
   async (activePage, { rejectWithValue }) => {
     try {
       const res = await axios.get(
-        `http://localhost:3000/job/getJobs?currentPage=${activePage}`
+        `${import.meta.env.VITE_API_URL}/job/getJobs?currentPage=${activePage}`
       );
       return res.data;
     } catch (error) {
@@ -32,7 +35,25 @@ export const applyJob = createAsyncThunk(
   '/auth/applyJob',
   async (data, { rejectWithValue }) => {
     try {
-      const res = await axios.post('http://localhost:3000/job/applyJob', data);
+      const res = await axios.post(
+        `${import.meta.env.VITE_API_URL}/job/applyJob`,
+        data
+      );
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const getApplicants = createAsyncThunk(
+  '/auth/getApplicants',
+  async (id, { rejectWithValue }) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:3000/job/${id}/applicants`
+       
+      );
       return res.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -42,7 +63,7 @@ export const applyJob = createAsyncThunk(
 
 export const getJobsByCreator = createAsyncThunk(
   '/auth/getJobsByCreator',
-  async ( id, { rejectWithValue }) => {
+  async (id, { rejectWithValue }) => {
     try {
       const res = await axios.get(`http://localhost:3000/job/${id}/creator`);
       return res.data;
@@ -52,14 +73,14 @@ export const getJobsByCreator = createAsyncThunk(
   }
 );
 
-
 const initialState = {
   jobs: [],
-  jobsCreator : [] ,
+  jobsCreator: [],
   error: null,
+  applicants: [],
   loading: false,
   toastId: null,
-  totalPages : 0
+  totalPages: 0,
 };
 
 const jobSlice = createSlice({
@@ -83,33 +104,47 @@ const jobSlice = createSlice({
       })
       .addCase(getJob.pending, (state) => {
         state.loading = true;
-      
       })
       .addCase(getJob.fulfilled, (state, action) => {
         (state.loading = false), console.log(action.payload);
         toast.dismiss(state.toastId);
-        state.totalPages = action.payload.data.totalPages ;
-        state.jobs = action.payload.data.job
+        state.totalPages = action.payload.data.totalPages;
+        state.jobs = action.payload.data.job;
 
         // toast.success(action.payload.message);
       })
       .addCase(getJob.rejected, (state, action) => {
         (state.loading = false), console.log(action.payload);
-      }).addCase(applyJob.pending , (state,action)=>{
-        state.loading = true
-      }).addCase(applyJob.fulfilled, (state,action)=>{
-        state.loading = false
-      }).addCase(applyJob.rejected , (state,action)=>{
-        state.loading = false 
-      
-      }).addCase(getJobsByCreator.pending, (state, action) => {
+      })
+      .addCase(applyJob.pending, (state, action) => {
+        state.loading = true;
+      })
+      .addCase(applyJob.fulfilled, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(applyJob.rejected, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(getJobsByCreator.pending, (state, action) => {
         (state.loading = false), console.log(action.payload);
-      }).addCase(getJobsByCreator.fulfilled, (state,action)=>{
+      })
+      .addCase(getJobsByCreator.fulfilled, (state, action) => {
+        state.loading = false;
+        state.jobsCreator = action.payload.data;
+      })
+      .addCase(getJobsByCreator.rejected, (state, action) => {
+        state.loading = false;
+      })
+      .addCase(getApplicants.pending, (state, action) => {
         state.loading = false
-        state.jobsCreator = action.payload.data
-      }).addCase(getJobsByCreator.rejected , (state,action)=>{
-        state.loading = false 
-      
+      })
+      .addCase(getApplicants.fulfilled, (state, action) => {
+        state.loading = false;
+       
+        state.applicants = action.payload.data.applicants;
+      })
+      .addCase(getApplicants.rejected, (state, action) => {
+        state.loading = false;
       });
   },
 });

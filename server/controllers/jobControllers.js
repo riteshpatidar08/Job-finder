@@ -124,7 +124,7 @@ const getApplicants = async (req, res) => {
       'name email'
     );
     res.status(200).json({
-      job,
+     data :  job,
     });
   } catch (error) {}
 };

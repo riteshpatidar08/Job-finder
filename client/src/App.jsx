@@ -13,7 +13,8 @@ import OpenRoutes from './components/OpenRoutes';
 import { Toaster } from 'sonner';
 import Homepage from './pages/Homepage';
 import AllJobPage from './pages/AllJobPage';
-
+import Footer from './components/Footer';
+import ViewApplicants from './pages/ViewApplicants';
 function App() {
   return (
     <>
@@ -45,8 +46,10 @@ function App() {
 
         <Route element={<PrivateRoutes allowedRole={['recruiter']} />}>
           <Route path="/recruiter/post-job" element={<PostJobPage />} />
+          <Route path= '/recruiter/post-job/:id' element={<ViewApplicants/>}/>
         </Route>
       </Routes>
+      <Footer/>
     </>
   );
 }

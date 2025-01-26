@@ -8,9 +8,9 @@ function Navbar() {
   const { role } = useSelector((state) => state.auth);
 
   return (
-    <div>
+    <div className='sticky top-0 z-50'>
       <header
-        className="h-16 m-3 bg-opacity-50 backdrop-blur-lg rounded-lg  drop-shadow-md px-4 sticky z-10 top-0 flex bg-dark-gray-1 items-center justify-between"
+        className="h-16 m-3 bg-opacity-50 backdrop-blur-lg rounded-lg  drop-shadow-md px-4  flex bg-dark-gray-1 items-center justify-between"
       >
         <Link to="/" className="text-white ml-2 text-xl font-bold">
           Job<span className="text-red">finder</span>
