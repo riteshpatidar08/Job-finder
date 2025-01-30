@@ -5,6 +5,7 @@ import { Pagination } from '@mantine/core';
 import Hero from './../components/HeroSection';
 import JobCard from '../components/JobCard';
 import { Link } from 'react-router-dom';
+import JobFilter from '../components/JobFilter';
 
 function Homepage() {
   const dispatch = useDispatch();
@@ -19,15 +20,17 @@ function Homepage() {
     <div>
       <Hero />
       <div className="flex gap-4 p-4">
-     
-        <div className="w-1/4"></div>
+        <div className="w-1/4 sticky top-10">
+          {/* <JobFilter/> */}
+        </div>
 
-      
         <div className="w-2/4 p-4">
           <h1 className="font-bold text-xl mb-4">See Latest Job Posts</h1>
           <div className="flex flex-col gap-4">
             {jobs.length > 0 &&
-              jobs.map((job) => <JobCard width= 'w-full' key={job.id} job={job} />)}
+              jobs.map((job) => (
+                <JobCard width="w-full" key={job.id} job={job} />
+              ))}
           </div>
           <Link
             to="/all-jobs"
@@ -37,7 +40,6 @@ function Homepage() {
           </Link>
         </div>
 
-        
         <div className="w-1/4 p-4">
           <div className="sticky top-10 bg-gray-100 p-4 shadow-md rounded-md">
             <h2 className="font-bold text-lg mb-2">Sponsored</h2>

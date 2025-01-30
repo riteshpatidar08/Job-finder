@@ -19,10 +19,10 @@ export const CreateJob = createAsyncThunk(
 
 export const getJob = createAsyncThunk(
   '/auth/getjob',
-  async (activePage, { rejectWithValue }) => {
+  async ({activePage,query}, { rejectWithValue }) => {
     try {
       const res = await axios.get(
-        `${import.meta.env.VITE_API_URL}/job/getJobs?currentPage=${activePage}`
+        `${import.meta.env.VITE_API_URL}/job/getJobs?currentPage=${activePage}&search=${query}`
       );
       return res.data;
     } catch (error) {
@@ -36,7 +36,7 @@ export const applyJob = createAsyncThunk(
   async (data, { rejectWithValue }) => {
     try {
       const res = await axios.post(
-        `${import.meta.env.VITE_API_URL}/job/applyJob`,
+        `http://localhost:3000/job/applyJob`,
         data
       );
       return res.data;
@@ -66,6 +66,20 @@ export const getJobsByCreator = createAsyncThunk(
   async (id, { rejectWithValue }) => {
     try {
       const res = await axios.get(`http://localhost:3000/job/${id}/creator`);
+      return res.data;
+    } catch (error) {
+      return rejectWithValue(error);
+    }
+  }
+);
+
+export const statusUpdate = createAsyncThunk(
+  '/auth/statusUpdate',
+  async ({status , jobId , applicantsId}, { rejectWithValue }) => {
+    const data = {status}
+    try {
+      const res = await axios.post(`http://localhost:3000/job/${jobId}/${applicantsId}/status`,data);
+
       return res.data;
     } catch (error) {
       return rejectWithValue(error);
@@ -144,6 +158,16 @@ const jobSlice = createSlice({
         state.applicants = action.payload.data.applicants;
       })
       .addCase(getApplicants.rejected, (state, action) => {
+        state.loading = false;
+      }) .addCase(statusUpdate.pending, (state, action) => {
+        state.loading = false
+      })
+      .addCase(statusUpdate.fulfilled, (state, action) => {
+        state.loading = false;
+       
+        state.applicants = action.payload.data.applicants;
+      })
+      .addCase(statusUpdate.rejected, (state, action) => {
         state.loading = false;
       });
   },

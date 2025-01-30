@@ -3,9 +3,9 @@ import { sendSuccess } from '../utils/sendSuccess.js';
 import User from './../models/userModel.js';
 
 const getJobs = async (req, res) => {
-  const { currentPage, totalItems = 10 } = req.query;
+  const { currentPage, totalItems = 10, search } = req.query;
   console.log(currentPage);
-
+  console.log(search);
   try {
     const job = await Job.find()
       .sort({ postedDate: -1 })
@@ -124,7 +124,7 @@ const getApplicants = async (req, res) => {
       'name email'
     );
     res.status(200).json({
-     data :  job,
+      data: job,
     });
   } catch (error) {}
 };
@@ -153,7 +153,69 @@ const deactivateJob = async (req, res) => {
   });
 };
 
-const getAppliedJob = async (req, res) => {};
+const getAppliedJob = async (req, res) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await User.findById(userId)
+      .populate({
+        path: 'appliedJobs.jobId',
+        select: 'title companyName location experience applicants',
+        populate: {
+          path: 'applicants.userId',
+          select: '_id',
+        },
+      })
+      .select('-jobseeker -password -role -phoneNumber');
+
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+
+    const appliedJobsWithStatus = user.appliedJobs.flatMap((appliedJob) => {
+      return appliedJob.jobId.map((job) => {
+        const applicant = job.applicants.find(
+          (a) => a.userId?._id.toString() === userId
+        );
+
+        return {
+          jobId: job._id,
+          title: job.title,
+          companyName: job.companyName,
+          location: job.location,
+          experience: job.experience,
+          status: applicant ? applicant.status : 'Pending',
+        };
+      });
+    });
+
+    res.status(200).json({
+      data: appliedJobsWithStatus,
+    });
+  } catch (error) {
+    console.error('Error fetching applied jobs:', error);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+
+const statusUpdate = async (req, res) => {
+  const { jobId, applicantId } = req.params;
+  const { status } = req.body;
+  console.log(status);
+  const job = await Job.findById(jobId);
+  console.log(job);
+
+  const applicant = job.applicants.find(
+    (app) => app._id.toString() === applicantId
+  );
+  console.log(applicant);
+  applicant.status = status;
+  await job.save();
+  res.status(200).json({
+    message: 'Status updated Successfull',
+  });
+};
+
 export {
   createJob,
   getJobs,
@@ -161,4 +223,6 @@ export {
   getJobByCreator,
   getApplicants,
   deactivateJob,
+  getAppliedJob,
+  statusUpdate,
 };

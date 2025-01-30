@@ -5,7 +5,8 @@ import { getToken } from '../utils/getToken';
 import { useDispatch, useSelector } from 'react-redux';
 import { applyJob } from '../redux/Slices/jobSlice';
 import { useNavigate } from 'react-router-dom';
-import { motion } from "motion/react"
+import { motion } from "motion/react";
+
 function JobCard({ job, width = 'w-2/4' }) {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -54,8 +55,10 @@ function JobCard({ job, width = 'w-2/4' }) {
     );
   }
 
+  console.log(job)
+
   return (
-    <motion.div  className={`${width} bg-gray-alpha-2 drop-shadow-lg p-4 rounded-lg relative`}>
+    <motion.div className={`${width} bg-gray-alpha-2 drop-shadow-lg p-4 rounded-lg relative`}>
       <div className="flex flex-col gap-2">
         <h1 className="text-red font-semibold text-md">{job.title}</h1>
         <h3 className="text-sm">{job.companyName}</h3>
@@ -78,12 +81,22 @@ function JobCard({ job, width = 'w-2/4' }) {
         <span className="text-sm absolute top-2 right-3 font-bold">
           {getTimeDifference(job.postedDate)}
         </span>
+          <div className="mt-4  flex gap-1 text-xs">
+          {job.requirement?.map((requirement, index) => (
+            <p key={index} className="flex items-start">
+              <span className="mr-[2px] text-red-500">•</span>
+              {requirement}
+            </p>
+          ))}
+        </div>
         <button
           onClick={() => handleApplyNow(job._id)}
-          className="text-center rounded-md mt-4 px-10 py-2 bg-red text-white transition-transform transform hover:border hover:border-red-600 hover:bg-opacity-0"
+          className="text-center rounded-md mt-4 px-10 py-2 bg-red text-white transition-transform transform hover:border hover:border-red-600 duration-200 ease-out hover:bg-opacity-0"
         >
           {token ? 'Apply Now' : 'Login to Apply'}
         </button>
+        
+      
       </div>
     </motion.div>
   );

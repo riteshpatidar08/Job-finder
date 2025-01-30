@@ -17,7 +17,6 @@ function PostJobPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Pagination state
   const [page, setPage] = useState(1);
   const rowsPerPage = 10;
 
@@ -30,19 +29,16 @@ function PostJobPage() {
     dispatch(getJobsByCreator(id));
   }, [dispatch, id]);
 
-  // Calculate data for current page
   const paginatedData = jobsCreator.slice(
     (page - 1) * rowsPerPage,
     page * rowsPerPage
   );
 
   return (
-    <div className="mr-5">
+    <div className="mr-5 mt-8">
       <div className="flex justify-between items-center px-5">
-  
-        <h1 className="text-2xl font-semibold">Post Jobs</h1>
+        <h1 className="text-xl font-semibold">Post Jobs</h1>
 
-      
         <Button
           leftSection={<CirclePlus size={16} />}
           onClick={open}
@@ -52,7 +48,6 @@ function PostJobPage() {
         </Button>
       </div>
 
-    
       <JobDrawerForm opened={opened} close={close} />
 
       {/* Data Table */}
@@ -71,13 +66,12 @@ function PostJobPage() {
               title: 'Status',
               render: (data) => (
                 <div className="flex items-center">
-                
                   <div
                     className={`w-3 h-3 rounded-full mr-2 ${
                       data.isActive ? 'bg-green-500' : 'bg-red'
                     }`}
                   />
-                  
+
                   <span>{data.isActive ? 'Active' : 'Inactive'}</span>
                 </div>
               ),
